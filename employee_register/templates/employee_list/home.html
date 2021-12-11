@@ -1,0 +1,385 @@
+<html>
+<head>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" charset="utf8" 
+    src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row form-group" style="margin-top:30px;">
+        <div class="col-lg-6">
+            <button class="btn btn-block btn-success" id="insert_btn" data-toggle="modal" data-target="#insert_data">INSERT</button>
+        </div>
+        <div class="col-lg-6">
+            <button class="btn btn-block btn-success" id="update_btn">EDIT ALL</button>
+            <button class="btn btn-block btn-success" id="save_all_btn" style="display:none;margin-top:0px">SAVE ALL</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+              <div class="alert alert-success" id="upt_success" style="display:none">
+
+              </div>
+               <div class="alert alert-danger" id="upt_error" style="display:none">
+
+              </div>
+        </div>
+    </div>
+
+    <div class="reset">
+        <div class="form-group" style="display: none;">
+            <button class="btn btn-block btn-outline-warning reset_button" type="button"><i class="fas fa-undo"></i> Reset</button>
+        </div>
+    </div>
+    
+    <div class="input-group search_box" style="display: none;">
+        <input type="text" class="form-control remove_border" id="search_box" name="search_box" placeholder="Enter SC No...">
+        <div class="input-group-append">
+            <button class="btn btn-info" type="button"><i class="fa fa-search"></i></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="draft" role="tabpanel"></div>
+            <!-- <table id="table_id" class="table table-striped card-table table-vcenter"> -->
+                <table  id="table_id" class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td class="editable" data-type="name">{{ student.name }}</td>
+                        <td class="editable" data-type="email">{{ student.email }}</td>
+                        <td class="editable" data-type="gender">{{ student.gender }}</td>
+                        <td>{{ student.created_at }}</td>
+                        <td class="btn-td-block"><button class="btn btn-block btn-delete btn-danger">DELETE</button></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="insert_data" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h4 class="modal-title">Insert Student</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+              <label>Name : </label>
+              <input type="text" name="name" id="ins_name" class="form-control" placeholder="Name">
+          </div>
+          <div class="form-group">
+              <label>Email : </label>
+              <input type="text" name="email" id="ins_email" class="form-control" placeholder="Email">
+          </div>
+           <div class="form-group">
+              <label>Gender : </label>
+              <select name="gender" class="form-control" id="ins_gender">
+                  <option>Male</option>
+                  <option>Female</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <input type="button" name="submit" class="btn btn-block btn-info btn-insert-data" value="INSERT STUDENT">
+          </div>
+          <div class="form-group">
+              <div class="alert alert-success" id="ins_success" style="display:none">
+
+              </div>
+               <div class="alert alert-danger" id="ins_error" style="display:none">
+
+              </div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
+<!-- needed to use moment.js for our date sorting-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+
+
+<script>
+    $(".btn-insert-data").click(function(){
+
+        var name=$("#ins_name").val();
+        var email=$("#ins_email").val();
+        var gender=$("#ins_gender").val();
+        if(name==""){
+            $("#ins_error").text("Please Enter Name")
+            $("#ins_error").show()
+            return;
+        }
+        else if(email==""){
+            $("#ins_error").text("Please Enter Email")
+            $("#ins_error").show()
+            return;
+        }
+        else{
+                $(".btn-insert-data").attr("disabled","disabled");
+                $(".btn-insert-data").text("Inserting... Please Wait..");
+            $.ajax({
+                url:'{% url "InseartStudent" %}',
+                type:'POST',
+                data:{name:name,email:email,gender:gender}
+            })
+            .done(function(response){
+                if(response['error']==false){
+                    $("#ins_error").hide();
+                    $("#ins_success").text(response['errorMessage']);
+                    $("#ins_success").show();
+                    var html_data="<tr><td>"+response['id']+"</td><td class='editable' data-type='name'>"+name+"</td><td class='editable' data-type='email'>"+email+"</td><td class='editable' data-type='gender'>"+gender+"</td><td>"+response['created_at']+"</td><td class='btn-td-block'><button class='btn btn-block btn-delete btn-danger'>DELETE</button></td></tr>";
+                    $(".table tbody").append(html_data);
+                }
+                else{
+                    $("#ins_success").hide();
+                    $("#ins_error").text(response['errorMessage']);
+                    $("#ins_error").show();
+                }
+            })
+            .fail(function(){
+                 $("#ins_success").hide();
+                 $("#ins_error").text("Something Went Wrong!");
+                 $("#ins_error").show();
+            })
+            .always(function(){
+                $(".btn-insert-data").removeAttr("disabled");
+                $(".btn-insert-data").text("INSERT STUDENT");
+            })
+        }
+    })
+
+    $("#update_btn").click(function(){
+            $("#update_btn").hide();
+            $("#save_all_btn").show();
+
+       $(".editable").each(function(){
+           var value=$(this).text();
+           var types=$(this).data('type');
+           if(types!='gender'){
+                var html_data="<input type='text' name='"+types+"'  class='form-control input_"+types+" input_data' value='"+value+"'>";
+                $(this).html(html_data);
+           }
+           else{
+                var html_data="<select name='"+types+"'  class='form-control input_"+types+" input_data'>";
+                if(value=="Male"){
+                    html_data+="<option selected>Male</option><option>Female</option>";
+                }
+                else{
+                    html_data+="<option>Male</option><option selected>Female</option>";
+                }
+                html_data+="</select>";
+                $(this).html(html_data);
+           }
+        });
+    });
+
+    $("#save_all_btn").click(function(){
+        $("#save_all_btn").attr("disabled","disabled");
+        $("#save_all_btn").text("Saving Data....");
+
+        var json_data=[];
+        $(".input_data").each(function(){
+                var value=$(this).val();
+                var parent_html=$(this).parent();
+                parent_html.html(value);
+                $(this).remove();
+         });
+        $("tbody tr").each(function(){
+             var id=$(this).children().eq(0).text()
+             var name=$(this).children().eq(1).text()
+             var email=$(this).children().eq(2).text()
+             var gender=$(this).children().eq(3).text()
+
+             var single_data={"id":id,"name":name,"email":email,"gender":gender};
+             json_data.push(single_data);
+        });
+
+        var string_data=JSON.stringify(json_data)
+        $.ajax({
+                url:'{% url "update_all" %}',
+                type:'POST',
+                data:{data:string_data}
+            })
+            .done(function(response){
+                if(response['error']==false){
+                    $("#upt_error").hide();
+                    $("#upt_success").text(response['errorMessage']);
+                    $("#upt_success").show();
+
+                }
+                else{
+                    $("#upt_success").hide();
+                    $("#upt_error").text(response['errorMessage']);
+                    $("#upt_error").show();
+                }
+            })
+            .fail(function(){
+                 $("#upt_success").hide();
+                 $("#upt_error").text("Something Went Wrong!");
+                 $("#upt_error").show();
+            })
+            .always(function(){
+                 $("#save_all_btn").removeAttr("disabled");
+                 $("#save_all_btn").text("SAVE ALL");
+                 $("#update_btn").show();
+                 $("#save_all_btn").hide();
+            })
+
+    });
+
+    $(document).on("click",".btn-delete",function(){
+            var this_html=$(this);
+            this_html.attr("disabled","disabled");
+            this_html.text("DELETING....");
+            var id=this_html.parent().parent().children().first().text();
+            //console.log(id);
+            $.ajax({
+                url:'{% url "delete_data" %}',
+                type:'POST',
+                data:{id:id}
+            })
+            .done(function(response){
+                if(response['error']==false){
+                    this_html.parent().parent().remove();
+                    $("#upt_error").hide();
+                    $("#upt_success").text(response['errorMessage']);
+                    $("#upt_success").show();
+
+                }
+                else{
+                    $("#upt_success").hide();
+                    $("#upt_error").text(response['errorMessage']);
+                    $("#upt_error").show();
+                }
+            })
+            .fail(function(){
+                 $("#upt_success").hide();
+                 $("#upt_error").text("Something Went Wrong!");
+                 $("#upt_error").show();
+            });
+    });
+
+//     $(document).ready( function () {
+
+//     $.fn.dataTable.moment( 'MMM D, YYYY' );
+//     $.fn.dataTable.moment( 'D-MMM-YY' );
+//     $('#table_id').DataTable({
+
+//     dom: 'B<"clear">lfrtip',
+//     buttons: {
+//           name: 'primary',
+//           buttons: [ 'copy', 'csv', 'excel', 'pdf' ]
+
+//         }}
+//     );
+// } );
+
+
+// var completedTable = null;
+// $(document).ready(function () {
+//     loadDataTable({});
+// });
+
+var name     = '';
+var email  = '';
+var created_at  = '';
+var search_text = '';
+
+function loadDataTable(data){
+    if (completedTable) {
+        completedTable.destroy();
+    }
+    let url = $(".getStudent").data("url");
+
+    completedTable = $(".student_list").DataTable({
+        dom      : "<'row top'<'col-md-1 reset_btn'><'col-md-2 name'><'col-md-2 buyer'><'col-md-2 date'><'col-md-2 email'><'col-md-3 search_area'>>t",
+        ordering: false,
+        paging: true,
+        iDisplayLength: 25,
+        pageLength: 5,
+        autoWidth: false,
+        scrollY: '365',
+        scroller: true,
+        deferRender: true,
+        serverSide: true,
+        processing: true,
+        ajax:{
+            type: "POST",
+            url: url,
+            data: data,
+            dataSrc: ""
+        },
+
+        initComplete:function( settings, json){
+             if( Object.keys(data).length > 0 ){
+            //     if(data.company.length > 0){
+            //         $("#companies").select2("destroy").val(data.company).select2()
+            //     }
+            //     if(data.buyer.length > 0){
+            //         $("#buyies").select2("destroy").val(data.buyer).select2()
+            //     }
+            //     if(data.merchant.length > 0){
+            //         $("#merchanties").select2("destroy").val(data.merchant).select2()
+            //     }
+                $("#search_box").val(data.search_text).focus()
+            }
+        }
+    });
+
+    $(".reset").children().clone().appendTo(".dataTables_wrapper .reset_btn");
+    $(".dataTables_wrapper .reset_btn").children().show();
+
+    $(".search_box").clone().appendTo(".dataTables_wrapper .search_area");
+    $(".dataTables_wrapper .search_area .search_box").show();
+
+    $(".search_box").on("click", ".btn", function(){
+        search_text = $("#search_box").val();
+        setData();
+    });
+}
+
+function setData(){
+    data = {'name':name, 'email':email, 'created_at':created_at, 'search_text':search_text}
+    loadDataTable(data);
+}
+
+
+    
+</script>
+</body>
+</html>
