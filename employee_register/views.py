@@ -1,5 +1,7 @@
+import datetime
 import json
-# from django.db.models.query_utils import Q
+from django.db.models.query import QuerySet
+from django.db.models.query_utils import Q
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -7,14 +9,49 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import StudentData
+from django.utils.dateparse import parse_date, parse_datetime
 
 
 def HomePage(request):
-    students = StudentData.objects.all()
-    context={
-        "students":students
-    }
-    return render(request,"employee_list/home.html", context)
+    if request.method=="POST":
+        name=request.POST.get("studentName")
+        email=request.POST.get("studentName")
+        date=request.POST.get("creat_at")
+        # date=parse_datetime(studentdate)
+        print(date)
+        # students = StudentData.objects.filter(Q(name__icontains = name)|Q(email__icontains = name)|Q(created_at__date=date))
+        q = Q()
+        if name or email:
+            q &= Q(name__icontains=name)|Q(email__icontains = name)
+ 
+        if date:
+            q &= Q(created_at__date=date)
+        students = StudentData.objects.filter(q)
+        print('student counter::: ',students.count())
+        context={
+            "students":students,
+            "name":name,
+        }
+
+        return render(request,"employee_list/home.html", context)
+    
+    else:
+       context={
+           "students":StudentData.objects.all()
+          
+       }  
+
+    return render(request,"employee_list/home.html", context)  
+
+
+
+    # myFilter=infoFilter(request.GET, queryset = students)
+    # students = myFilter.qs
+    # context={
+    #     "students":students,
+    #     "myFilter":myFilter
+    # }
+    # return render(request,"employee_list/home.html", context)
 
 @csrf_exempt
 def InsertStudent(request):
@@ -186,6 +223,8 @@ def get_student_for_datatable(request):
     created_at =request.POST.get('created_at','')
     student_list = StudentData.objects.all()
 
+    # print(student_list)
+
     if name: student_list = student_list.filter(name=name)
     if email: student_list = student_list.filter(email=email)
 
@@ -199,8 +238,14 @@ def get_student_for_datatable(request):
         StudentName = student.name
         Email = student.email
         CreateDate = student.created_at
+
+        # print(student)
+
+
         
-        data = [name, email, created_at]
+        data = [StudentName, Email, CreateDate]
         data_list.append(data)
+
+        print(data_list)
 
     return JsonResponse(data_list, safe=False)

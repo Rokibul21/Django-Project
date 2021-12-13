@@ -14,9 +14,9 @@ class StudentData(models.Model):
 
     class Meta:
 
-        db_table = 'StudentData'
+        db_table = 'studentdata'
 
-        verbose_name = "StudentData"
+        verbose_name = "studentdata"
 
         verbose_name_plural = "Student Data"
 

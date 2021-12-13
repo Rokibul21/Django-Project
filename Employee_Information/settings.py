@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+        # 'employee_register',
     'employee_register.apps.EmployeeRegisterConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'employee_register'
+
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -79,7 +81,7 @@ WSGI_APPLICATION = 'Employee_Information.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'EmployeeDb',
+        'NAME': 'StudentDb',
         'USER': 'postgres',
         'PASSWORD': 'rabby890@',
         'PORT': '5432',
