@@ -27,14 +27,14 @@ def HomePage(request):
         # if name: 
         #     print("name", name)
         #     filter_data['name'] = name  
-        # if gender: 
-        #     filter_data['gender'] = gender
-        # if str_date:
+        # elif str_date:
         #     startdate= datetime.strptime(str_date, "%Y-%m-%d")
         #     filter_data['created_at__gte'] = startdate 
-        # if end_date:
+        # elif end_date:
         #     enddate=datetime.strptime(end_date,"%Y-%m-%d")
         #     filter_data['created_at__lte'] = enddate
+        # elif gender: 
+        #     filter_data['gender'] = gender
 
         # students = StudentData.objects.filter(**filter_data)
         # date=parse_datetime(studentdate)
@@ -43,7 +43,7 @@ def HomePage(request):
         q = Q()
         if name or email:
             q &= Q(name__icontains=name)|Q(email__icontains = email)
-            # print(q)
+            print(q)
             # students = StudentData.objects.filter(Q(name__icontains=name)|Q(email__icontains = email))
         # if str_date:
         #     startdate= datetime.strptime(str_date, "%Y-%m-%d")
@@ -64,7 +64,7 @@ def HomePage(request):
             enddate=datetime.strptime(end_date,"%Y-%m-%d")
             print(startdate)
             print(enddate)
-            # q = Q(created_at__gte=startdate , created_at__lte=enddate)
+        #     # q = Q(created_at__gte=startdate , created_at__lte=enddate)
             q &= Q(created_at__date__range=[startdate,enddate])
             # print(q)
             # students = StudentData.objects.filter(created_at__date__gte=startdate ,created_at__date__lte=enddate)
@@ -76,7 +76,7 @@ def HomePage(request):
             # print('gender',students)
                  
         students = StudentData.objects.filter(q)
-        # print(students)
+        print(students)
         print('student counter::: ',students.count())
         context={
             "students":students,
