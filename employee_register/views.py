@@ -1,6 +1,7 @@
-import datetime
+from datetime import datetime
+
 import json
-from django.db.models.query import QuerySet
+# from django.db.models.query import QuerySet
 from django.db.models.query_utils import Q
 
 from django.http import HttpResponse, JsonResponse
@@ -9,30 +10,81 @@ from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import StudentData
-from django.utils.dateparse import parse_date, parse_datetime
+# from django.utils.dateparse import parse_date, parse_datetime
 
 
 def HomePage(request):
     if request.method=="POST":
-        name=request.POST.get("studentName")
+        name=request.POST.get("studentName") 
         email=request.POST.get("studentName")
-        date=request.POST.get("creat_at")
+        gender=request.POST.get("gender")
+        
+        str_date=request.POST.get("start_at","")
+        end_date=request.POST.get("end_at","")
+
+        
+        # filter_data = {}
+        # if name: 
+        #     print("name", name)
+        #     filter_data['name'] = name  
+        # if gender: 
+        #     filter_data['gender'] = gender
+        # if str_date:
+        #     startdate= datetime.strptime(str_date, "%Y-%m-%d")
+        #     filter_data['created_at__gte'] = startdate 
+        # if end_date:
+        #     enddate=datetime.strptime(end_date,"%Y-%m-%d")
+        #     filter_data['created_at__lte'] = enddate
+
+        # students = StudentData.objects.filter(**filter_data)
         # date=parse_datetime(studentdate)
-        print(date)
+        # print(date)
         # students = StudentData.objects.filter(Q(name__icontains = name)|Q(email__icontains = name)|Q(created_at__date=date))
         q = Q()
         if name or email:
-            q &= Q(name__icontains=name)|Q(email__icontains = name)
- 
-        if date:
-            q &= Q(created_at__date=date)
+            q &= Q(name__icontains=name)|Q(email__icontains = email)
+            # print(q)
+            # students = StudentData.objects.filter(Q(name__icontains=name)|Q(email__icontains = email))
+        # if str_date:
+        #     startdate= datetime.strptime(str_date, "%Y-%m-%d")
+        # else:
+        #     startdate =""
+        # if end_date:
+        #     enddate=datetime.strptime(end_date,"%Y-%m-%d")
+        # else:
+        #     enddate =""
+
+        # elif name or email or str_date or end_date:
+        #     startdate= datetime.strptime(str_date, "%Y-%m-%d")
+        #     enddate=datetime.strptime(end_date,"%Y-%m-%d")
+        #     students = StudentData.objects.filter(Q(name__icontains=name)|Q(email__icontains = email) |Q(created_at__date__gte=startdate ,created_at__date__lte=enddate))
+        
+        elif str_date or end_date :
+            startdate= datetime.strptime(str_date, "%Y-%m-%d")
+            enddate=datetime.strptime(end_date,"%Y-%m-%d")
+            print(startdate)
+            print(enddate)
+            # q = Q(created_at__gte=startdate , created_at__lte=enddate)
+            q &= Q(created_at__date__range=[startdate,enddate])
+            # print(q)
+            # students = StudentData.objects.filter(created_at__date__gte=startdate ,created_at__date__lte=enddate)
+        # else:
+        #     print("Else")
+        #     students = StudentData.objects.all()
+        elif gender:
+            q &= Q(gender=gender.title())
+            # print('gender',students)
+                 
         students = StudentData.objects.filter(q)
+        # print(students)
         print('student counter::: ',students.count())
         context={
             "students":students,
             "name":name,
+            "gender":gender,
+            "str_date":str_date,
+            "end_date":end_date
         }
-
         return render(request,"employee_list/home.html", context)
     
     else:

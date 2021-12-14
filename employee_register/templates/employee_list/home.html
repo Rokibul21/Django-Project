@@ -31,25 +31,37 @@
         </div>
     </div>
     <form action="" method="POST">{% csrf_token %}
+        <div class="row">  
+            <div class="clo-md-2">
+                <label>Search for</label>
 
-        <div class="row">
-
-            <div class="col-md-6" id="size">
-
-                <div class="form-group">
-
-                    <label>Search for</label>
-
-                    <input type="text" name="studentName" value="{{name}}">
-
-                    <input type="date"  name="creat_at">
-                </div>
-                <div class="form-group"> 
-                    <input type="submit"  value="Search" class="btn btn-info">
-                </div>
-
+                <input type="text" name="studentName" value="{{name}}">
+            </div> &nbsp;
+            <div class="clo-md-2">
+                <label>
+                    Start_Date
+                </label>
+                <input type="date"  name="start_at" value="{{str_date}}">
+            </div> &nbsp;
+            <div class="clo-md-2"> 
+                <label>
+                    End_Date 
+                </label>
+                <input type="date"  name="end_at" value="{{end_date}}">
+            </div> &nbsp; 
+            <div class="clo-md-2">
+                <label for="gender" class="form-label">Gender</label>
+                <select name="gender" class="form-select">
+                  <option selected>Choose...</option>
+                  <option {% if gender == "male" %} selected {% endif %} value="male">Male</option>
+                  <option {% if gender == "female" %} selected {% endif %} value="female">Female</option>
+                  <option {% if gender == "others" %} selected {% endif %} value="others">Others</option>
+                </select>
+            </div>&nbsp;  &nbsp;
+            <div class="clo-md-2"> 
+                <input type="submit"  value="Search" class="btn btn-sm btn-info ">
             </div>
-        </div>
+        </div> 
     </form>
     <br>
     <div class="row">
