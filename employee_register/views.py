@@ -126,10 +126,12 @@ def InsertStudent(request):
 @csrf_exempt
 def update_all(request, id):
     data=request.POST.get("data")
+ 
     dict_data=json.loads(data)
+    print(dict_data)
     try:
         for dic_single in dict_data:
-            student=StudentData.objects.get(id)
+            student=StudentData.objects.all(id)
             student.name=dic_single['name']
             student.email=dic_single['email']
             student.gender=dic_single['gender']
