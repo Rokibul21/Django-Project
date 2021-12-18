@@ -303,3 +303,9 @@ def get_student_for_datatable(request):
         print(data_list)
 
     return JsonResponse(data_list, safe=False)
+
+
+@csrf_exempt 
+def get_Department():
+    return HttpResponse()
+

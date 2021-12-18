@@ -2,7 +2,13 @@ from django.db import models
 from django.http import request
 
 
+class Department(models.Model):
+    deptId        = models.AutoField(primary_key=True)
+    deptName      = models.CharField(max_length=50)
+
+
 class StudentData(models.Model):
+    
     id             = models.AutoField(primary_key=True)
     name           = models.CharField(max_length=255)
     email          = models.CharField(max_length=255) 
