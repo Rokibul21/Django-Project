@@ -9,9 +9,16 @@ from django.shortcuts import get_object_or_404, render
 
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import StudentData
+from .models import Department, StudentData
 # from django.utils.dateparse import parse_date, parse_datetime
 
+
+def departmentlist(request):
+    department = Department.objects.all()
+    context    = {
+        "department": department
+    }
+    return render(request,"employee_list/department.html",context)
 
 def HomePage(request):
     if request.method=="POST":

@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete/', views.delete_data , name="delete_data"),
     # path('getData/', views.get_data , name="getData")
     path('getStudent/', views.get_student_for_datatable , name="getStudnet"),
+    path('deparment/', views.departmentlist , name="departmentlist"),
 ]
